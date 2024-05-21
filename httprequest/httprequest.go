@@ -10,12 +10,12 @@ import (
 	"net/url"
 )
 
-var ethel_add = "https://account-manager-stage.app.eng.rdu2.redhat.com"
+var ethel_add = "www.google.com"
 
 func main() {
 
-	username := "lultest0515"
-	passwd := "redhatredhat"
+	username := "username"
+	passwd := "passwd"
 
 	create_account(username, passwd)
 	refresh_account(username, passwd)

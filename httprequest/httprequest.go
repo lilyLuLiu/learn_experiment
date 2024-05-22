@@ -8,18 +8,31 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"github.com/spf13/pflag"
 )
 
-var ethel_add = "www.google.com"
+
+var (
+	ethel_add string
+	username string
+	password string
+)
+
+func init() {
+	pflag.StringVar(&ethel_add, "address", "", "Address of Ethel")
+	pflag.StringVar(&username, "username", "", "Username")
+	pflag.StringVar(&password, "password", "", "Password")
+	pflag.Parse()
+}
 
 func main() {
-
-	username := "username"
-	passwd := "passwd"
-
-	create_account(username, passwd)
-	refresh_account(username, passwd)
-	view_account(username, passwd)
+	fmt.Println(ethel_add)
+	fmt.Println(username)
+	fmt.Println(password)
+	
+	create_account(username, password)
+	refresh_account(username, password)
+	view_account(username, password)
 }
 
 func http_post(posturl string, data map[string]string) string {

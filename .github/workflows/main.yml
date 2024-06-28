@@ -1,0 +1,25 @@
+name: Publish release on github
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: 
+          - ubuntu-latest
+        go: 
+          - '1.20'  
+    steps:
+      - name: checkout qe-platform repo
+        uses: actions/checkout@master
+        with:
+          name: https://gitlab.cee.redhat.com/crc/qe-platform
+          ref: master
+      - name: Show Working directory
+        run: ls
+      - name: run script
+        run: echo ${{ <context> }}

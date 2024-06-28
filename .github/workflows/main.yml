@@ -14,6 +14,8 @@ jobs:
         go: 
           - '1.20'  
     steps:
+      - name: run script
+        run: echo ${{ github.event.release.tag_name }}
       - name: checkout qe-platform repo
         uses: actions/checkout@master
         with:
@@ -21,5 +23,4 @@ jobs:
           ref: master
       - name: Show Working directory
         run: ls
-      - name: run script
-        run: echo ${{ github.event.release.tag_name }}
+      

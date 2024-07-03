@@ -45,7 +45,8 @@ jobs:
         env:
             TAG_CONTEXT: ${{ toJson(github.ref_name) }}
         run: |
-          ./build-qe-images.sh  "$TAG_CONTEXT"
+          echo "$TAG_CONTEXT"
+          ./build-qe-images.sh  $TAG_CONTEXT
         shell: bash
           
       

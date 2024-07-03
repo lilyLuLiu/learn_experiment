@@ -24,6 +24,7 @@ jobs:
           cat <<EOF > build-qe-images.sh
           ---
           echo "success"
+          echo $1
           EOF
         shell: bash
       - name: run ls
@@ -35,7 +36,7 @@ jobs:
         shell: bash
       - name: run script
         run: |
-          ./build-qe-images.sh 
+          ./build-qe-images.sh  ${{ github.event.release.tag_name }}
         shell: bash
           
       

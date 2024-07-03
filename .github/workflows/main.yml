@@ -28,7 +28,7 @@ jobs:
           registry: ${{ env.IMAGE_REGISTRY }}
       - name: write script
         run: |
-          cat <<EOF > build-qe-images.sh
+          cat > build-qe-images.sh << EOF
           echo "success"
           echo $1
           EOF

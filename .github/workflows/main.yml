@@ -16,18 +16,22 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: run script
+      - name: get tag
         run: echo ${{ github.event.release.tag_name }}
-      - name: checkout qe-platform repo
+      - name: write script
         run: |
           cat <<EOF > build-qe-images.sh
           ---
           echo "success"
           EOF
-      - name: run the script
+      - name: run ls
+        run: ls
+      - name: check script
         run: |
-          ls
           cat build-qe-images.sh
           chmod +x build-qe-images.sh
+      - name: run script
+        run: |
           ./build-qe-images.sh 
+          
       

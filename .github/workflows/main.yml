@@ -14,13 +14,16 @@ jobs:
         go: 
           - '1.20'  
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
       - name: run script
         run: echo ${{ github.event.release.tag_name }}
       - name: checkout qe-platform repo
-        uses: actions/checkout@master
-        with:
-          name: https://gitlab.cee.redhat.com/crc/qe-platform
-          ref: master
-      - name: Show Working directory
-        run: ls
+        run: |
+          cat <<EOF > build-qe-images.sh
+          ---
+          echo "success"
+          EOF
+      - name: run the script
+        run: build-qe-images.sh
       

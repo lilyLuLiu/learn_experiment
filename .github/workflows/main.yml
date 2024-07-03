@@ -20,10 +20,6 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: get tag
-        env:
-          TAG_CONTEXT: ${{ toJson(github.ref_name) }}
-        run: echo "$TAG_CONTEXT"
       - name: login quay
         uses: redhat-actions/podman-login@v1
         with:
@@ -45,6 +41,8 @@ jobs:
           chmod +x build-qe-images.sh
         shell: bash
       - name: run script
+        env:
+            TAG_CONTEXT: ${{ toJson(github.ref_name) }}
         run: |
           ./build-qe-images.sh  "$TAG_CONTEXT"
         shell: bash

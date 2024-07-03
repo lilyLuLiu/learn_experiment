@@ -29,8 +29,9 @@ jobs:
       - name: write script
         run: |
           cat > build-qe-images.sh << EOF
-          echo "success"
           echo $1
+          echo "success"
+          echo "test"
           EOF
         shell: bash
       - name: run ls

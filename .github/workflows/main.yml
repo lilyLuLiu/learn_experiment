@@ -1,8 +1,12 @@
-name: Publish release on github
+name: tag test
 on:
   push:
     tags:
       - '*'
+env:
+  REGISTRY_USER: rhn_support_lul
+  IMAGE_REGISTRY: quay.io
+  REGISTRY_PASSWORD: ${{ secrets.password }}
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -20,6 +24,11 @@ jobs:
         env:
           TAG_CONTEXT: ${{ toJson(github.ref_name) }}
         run: echo "$TAG_CONTEXT"
+      - name: login quay
+        uses: redhat-actions/podman-login@v1
+        with:
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_PASSWORD }}  
       - name: write script
         run: |
           cat <<EOF > build-qe-images.sh

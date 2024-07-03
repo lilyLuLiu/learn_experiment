@@ -25,5 +25,7 @@ jobs:
           echo "success"
           EOF
       - name: run the script
-        run: build-qe-images.sh
+        run: |
+          ls
+          ./build-qe-images.sh
       

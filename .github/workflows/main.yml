@@ -17,8 +17,9 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: get tag
-        run: echo ${{ github.event.release.tag_name }}
-        shell: bash
+        env:
+          TAG_CONTEXT: ${{ toJson(github.event.release.tag_name) }}
+        run: echo "$TAG_CONTEXT"
       - name: write script
         run: |
           cat <<EOF > build-qe-images.sh
@@ -36,7 +37,7 @@ jobs:
         shell: bash
       - name: run script
         run: |
-          ./build-qe-images.sh  ${{ github.event.release.tag_name }}
+          ./build-qe-images.sh  "$TAG_CONTEXT"
         shell: bash
           
       

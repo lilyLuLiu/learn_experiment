@@ -29,6 +29,7 @@ jobs:
         with:
           username: ${{ env.REGISTRY_USER }}
           password: ${{ env.REGISTRY_PASSWORD }}  
+          registry: ${{ env.IMAGE_REGISTRY }}
       - name: write script
         run: |
           cat <<EOF > build-qe-images.sh

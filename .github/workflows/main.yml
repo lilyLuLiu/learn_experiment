@@ -27,5 +27,7 @@ jobs:
       - name: run the script
         run: |
           ls
-          ./build-qe-images.sh
+          cat build-qe-images.sh
+          chmod +x build-qe-images.sh
+          ./build-qe-images.sh 
       

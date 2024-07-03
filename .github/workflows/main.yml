@@ -33,7 +33,6 @@ jobs:
       - name: write script
         run: |
           cat <<EOF > build-qe-images.sh
-          ---
           echo "success"
           echo $1
           EOF

@@ -29,9 +29,11 @@ jobs:
       - name: write script
         run: |
           cat > build-qe-images.sh << EOF
-          echo ${1}
+          echo "${1}"
           echo "success"
           echo "test"
+          podman pull podman pull quay.io/rhn_support_lul/mytest1
+          podman images
           EOF
         shell: bash
       - name: run ls

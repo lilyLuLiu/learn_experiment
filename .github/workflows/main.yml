@@ -32,7 +32,7 @@ jobs:
           echo "${1}"
           echo "success"
           echo "test"
-          podman pull podman pull quay.io/rhn_support_lul/mytest1
+          podman pull quay.io/rhn_support_lul/mytest1
           podman images
           EOF
         shell: bash

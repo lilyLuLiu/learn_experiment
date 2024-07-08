@@ -30,6 +30,7 @@ jobs:
         run: |
           cat > build-qe-images.sh << EOF
           name=v"${1}"
+          echo ${1}
           echo $name
           echo "test"
           podman pull quay.io/rhn_support_lul/mytest1:v1
@@ -48,7 +49,7 @@ jobs:
             TAG_CONTEXT: ${{ toJson(github.ref_name) }}
         run: |
           echo "$TAG_CONTEXT"
-          ./build-qe-images.sh  $TAG_CONTEXT
+          ./build-qe-images.sh "$TAG_CONTEXT"
         shell: bash
           
       

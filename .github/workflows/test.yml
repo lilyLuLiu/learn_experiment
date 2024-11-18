@@ -1,0 +1,19 @@
+name: Build Windows artifacts
+on:
+  workflow_dispatch:
+jobs:
+  publish_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: check pwd
+        run: |
+          ls
+          pwd
+          mkdir mytest
+          cd  mytest
+      - name: check pwd again
+        run: |
+          ls
+          pwd

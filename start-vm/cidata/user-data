@@ -1,0 +1,13 @@
+#cloud-config
+users:
+  - name: fedora
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCpiKqT7uVbxn0w5CLO4+ydM0ykgIazTR3iZEMt+6/qyvpLCUv32xEkrCAn8U9Rxk/JAQ8LXRM7tIeR8G/4nKFsHF6v3ReQa3+WUlv4MYlz6A5c+1EsDJ1MJtbHgzCssG88Vx2J2411Q2L2qDuVvsXFa3qkw1aCNhI0HIK43UZQdJFG1bWAi5+9Gsumva3elIHgRtOMnDlU2B+qdbg974IlCSZodkPDFpzAK7XCMxItNppN10ZTg1diNW9Np3L8OsMOsd1ghbOSzp3/yz0TcFOu2t+V+gLAh8O3hop3zICKduZP+vGZwZ7jrgQan4Z9jfoElyETUklkkdlrX1fU21ds8X1fB/3xf/CfjF316cG/JfICbTJRAefeKOI4hewBxTw5UZLqE6FSMu4MF6QvOv1vs+ByfaOhQcNISdrWb7+iubHhAFY1o2NYyzyJs6+FxwyT/hYR/1A67gD4UgkZ5i8pe+wH0pvCOdlOOM8Ual3xWwElA1Liw5Rm4sQ5+F7dvEM= lul@lul-mac
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+chpasswd:
+  list: |
+    fedora:fedora
+    root:root
+  expire: false
+ssh_pwauth: true

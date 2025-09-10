@@ -7,7 +7,7 @@ on:
         required: true
         type: string
         default: "ubuntu-latest"
-
+# avaliable runner can be check https://github.com/actions/runner-images
 jobs:
   machine-prepare:
     runs-on: ${{ inputs.runs-on }}
@@ -22,6 +22,26 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/authorized_keys
+
+      - name: install go 
+        run: |
+          wget https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.23.1.linux-amd64.tar.gz
+          export PATH=$PATH:/usr/local/go/bin
+          go version
+
+      - name: setup macadam
+        run: |
+          # Fetch the latest version directly from GitHub and install
+          curl -s https://api.github.com/repos/containers/gvisor-tap-vsock/releases/latest \
+            | awk 'BEGIN { FS = "\"\\s*:\\s*" } /browser_download_url/ && /linux-amd64/ {print $2}' \
+            | xargs wget -O gvproxy-linux-amd64
+          chmod +x gvproxy-linux-amd64
+          sudo mv gvproxy-linux-amd64 /usr/lib/podman/gvproxy
+
+          curl -LO https://github.com/crc-org/macadam/releases/download/v0.2.0/macadam-linux-amd64
+          chmod +x macadam-linux-amd64
+          mv macadam-linux-amd64 /usr/local/bin/macadam
 
       - name: getIP
         run: |

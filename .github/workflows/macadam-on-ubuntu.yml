@@ -1,0 +1,63 @@
+name: macadam-runner
+on:
+  workflow_dispatch:
+    inputs:
+      macadam-version:
+        description: "Target runner"
+        required: true
+        type: string
+        default: "0.3.0"
+
+jobs:
+  machine-prepare:
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: Tailscale setup 
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh && \
+          sudo tailscale up --auth-key=${{secrets.TAILSCALEKEY}}
+
+      - name: setup ssh 
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/authorized_keys
+
+      - name: install go 
+        run: |
+          wget https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.23.1.linux-amd64.tar.gz
+          export PATH=$PATH:/usr/local/go/bin
+          echo "/usr/local/go/bin" >> $GITHUB_PATH
+          go version
+
+      - name: setup macadam
+        run: |
+          # Fetch the latest version directly from GitHub and install
+          curl -s https://api.github.com/repos/containers/gvisor-tap-vsock/releases/latest \
+            | awk 'BEGIN { FS = "\"\\s*:\\s*" } /browser_download_url/ && /linux-amd64/ {print $2}' \
+            | xargs wget -O gvproxy-linux-amd64
+          chmod +x gvproxy-linux-amd64
+          sudo mv gvproxy-linux-amd64 /usr/lib/podman/gvproxy
+
+          curl -LO https://github.com/crc-org/macadam/releases/download/${{ inputs.macadam-version }}/macadam-linux-amd64
+          chmod +x macadam-linux-amd64
+          mv macadam-linux-amd64 /usr/local/bin/macadam
+
+      - name: clone repository
+        run: |
+          address="https://github.com/crc-org/macadam.git" && \
+          git clone $address && \
+          cd $(basename -s .git $address) && \
+          ls -al
+
+      - name: getIP
+        run: |
+          IP=`tailscale ip -4`
+          echo "Use the following command to debug from the host \`tailscale ssh runner@${IP}\` or \`rshell runner@${IP}\`"
+          sleep 18000
+
+      - name: Message user; 1 hour
+        run: |
+          sudo wall "about 30 minutes remaining"
+          sleep 1800

@@ -19,6 +19,7 @@ on:
           - "mapt"
           - "concurrency-control"
           - "crc-performance"
+          - "nextcloud"
 # avaliable runner can be check https://github.com/actions/runner-images
 jobs:
   machine-prepare:

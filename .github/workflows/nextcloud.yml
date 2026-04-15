@@ -30,6 +30,9 @@ jobs:
           export PATH=$PATH:/usr/local/go/bin
           echo "/usr/local/go/bin" >> $GITHUB_PATH
           go version
+      
+      - name: Install git-crypt
+        run: sudo apt-get update && sudo apt-get install -y git-crypt
 
       - name: clone repository
         run: |
@@ -42,6 +45,13 @@ jobs:
           echo "${{ secrets.NEXTCLOUD_GH_TOKEN }}" | podman login ghcr.io -u "lilyLiuLu" --password-stdin   
           cd nextcloud-lu-data && \
           ls -al
+
+      - name: git-crypt key
+        run: |
+          echo "${{ secrets.GIT_CRYPT_KEY }}" | base64 -d > git-crypt-key
+          chmod 600 git-crypt-key
+          cd nextcloud-lu-data && \
+          git-crypt unlock ../git-crypt-key
 
       - name: start nextcloud container
         run: |

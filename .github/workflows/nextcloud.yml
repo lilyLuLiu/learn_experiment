@@ -1,0 +1,76 @@
+name: nextcloud
+on:
+  workflow_dispatch:
+    inputs:
+      runs-on:
+        description: "Target runner"
+        required: true
+        type: string
+        default: "ubuntu-latest"
+# avaliable runner can be check https://github.com/actions/runner-images
+jobs:
+  machine-prepare:
+    runs-on: ${{ inputs.runs-on }}
+
+    steps:
+      - name: Tailscale setup 
+        run: |
+          curl -fsSL https://tailscale.com/install.sh | sh && \
+          sudo tailscale up --auth-key=${{secrets.TAILSCALEKEY}}
+
+      - name: setup ssh 
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/authorized_keys
+
+      - name: install go 
+        run: |
+          wget https://go.dev/dl/go1.23.1.linux-amd64.tar.gz
+          sudo tar -C /usr/local -xzf go1.23.1.linux-amd64.tar.gz
+          export PATH=$PATH:/usr/local/go/bin
+          echo "/usr/local/go/bin" >> $GITHUB_PATH
+          go version
+
+      - name: clone repository
+        run: |
+          echo "${{ secrets.NEXTCLOUD_GH_TOKEN }}" | gh auth login --with-token 
+          gh auth setup-git
+          git config --global core.editor "vim"
+          git config --global user.name "lilyLuLiu"
+          git config --global user.email "lilyliulu777@outlook.com"
+          gh repo clone lilyLuLiu/nextcloud-lu-data
+          echo "${{ secrets.NEXTCLOUD_GH_TOKEN }}" | podman login ghcr.io -u "lilyLiuLu" --password-stdin   
+          cd nextcloud-lu-data && \
+          ls -al
+
+      - name: start nextcloud container
+        run: |
+          cd nextcloud-lu-data && \
+          chmod +x start_container.sh 
+          IP=`tailscale ip -4`
+          ./start_container.sh $IP
+
+      - name: setup cronjob
+        run: |
+          pwd=`pwd`
+          folder=$pwd"/nextcloud-lu-data"
+          CRON_JOB="0 * * * * $folder/auto_git_commit.sh"
+      
+          # Add to current user's crontab (preserve existing entries)
+          (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+          
+          # Verify
+          echo "Current crontab:"
+          crontab -l
+
+      - name: getIP
+        run: |
+          IP=`tailscale ip -4`
+          echo "Use the following command to debug from the host \`tailscale ssh runner@${IP}\` or \`rshell runner@${IP}\`"
+          echo "Nextcloud should be accessible at http://${IP}:5757"
+          sleep 18000
+
+      - name: Message user; 1 hour
+        run: |
+          sudo wall "about 30 min remaining"
+          sleep 1800

@@ -1,0 +1,5 @@
+FROM registry.access.redhat.com/ubi10/ubi-minimal
+RUN microdnf install -y openssh-clients python3 pip \
+    && pip install --no-cache-dir pytest deepchecks pandas scikit-learn==1.3.2 setuptools==68.2.2 \
+    && microdnf clean all
+COPY . /opt/
